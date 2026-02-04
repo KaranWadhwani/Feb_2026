@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+        :root {
+            --color-pink: #ff6b9d;
+            --color-pink-light: #ffc2d4;
+            --color-pink-dark: #ff3d7f;
+            --color-cream: #fff5f7;
+            --color-white: #ffffff;
+            --color-text: #5a2e3e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, var(--color-pink-light) 0%, var(--color-cream) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(255, 107, 157, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--color-pink-dark);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 107, 157, 0.2);
+        }
+
+        .heart {
+            font-size: 4em;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+
+        .question {
+            font-size: 1.8em;
+            margin: 30px 0;
+            color: var(--color-text);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .yes-btn {
+            background: var(--color-pink);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        .yes-btn:hover {
+            background: var(--color-pink-dark);
+            transform: scale(1.05);
+        }
+
+        .no-btn {
+            background: #e0e0e0;
+            color: var(--color-text);
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .day-card {
+            background: linear-gradient(135deg, var(--color-pink-light), var(--color-pink));
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3);
+            border-color: var(--color-pink-dark);
+        }
+
+        .day-card h3 {
+            color: white;
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .day-card p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9em;
+        }
+
+        .itinerary {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .itinerary h3 {
+            color: var(--color-pink-dark);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .itinerary-item {
+            background: var(--color-cream);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 4px solid var(--color-pink);
+        }
+
+        .message {
+            background: linear-gradient(135deg, var(--color-pink-light), var(--color-pink));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            background: var(--color-pink);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--color-pink-dark);
+            transform: scale(1.05);
+        }
+
+        .celebration {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Screen 1: Proposal -->
+        <div id="proposalScreen" class="screen active">
+            <div class="card">
+                <div class="heart">💖</div>
+                <h1>Hey Beautiful!</h1>
+                <p class="question">Will you be my Valentine?</p>
+                <div class="button-container">
+                    <button class="yes-btn" onclick="acceptProposal()">Yes! 💕</button>
+                    <button class="no-btn" id="noBtn" onmouseenter="moveNoButton()">No</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Celebration and Days -->
+        <div id="daysScreen" class="screen">
+            <div class="card">
+                <div class="celebration">🎉💕🎊</div>
+                <h1>Yay! I&apos;m so happy!</h1>
+                <p style="font-size: 1.2em; margin: 20px 0;">Here&apos;s our special Valentine&apos;s Week plan:</p>
+                
+                <div class="days-grid">
+                    <div class="day-card" onclick="showDay('rose')">
+                        <h3>🌹 Rose Day</h3>
+                        <p>Feb 7</p>
+                    </div>
+                    <div class="day-card" onclick="showDay('propose')">
+                        <h3>💍 Propose Day</h3>
+                        <p>Feb 8</p>
+                    </div>
+                    <div class="day-card" onclick="showDay('chocolate')">
+                        <h3>🍫 Chocolate Day</h3>
+                        <p>Feb 9</p>
+                    </div>
+                    <div class="day-card" onclick="showDay('teddy')">
+                        <h3>🧸 Teddy Day</h3>
+                        <p>Feb 10</p>
+                    </div>
+                    <div class="day-card" onclick="showDay('promise')">
+                        <h3>🤝 Promise Day</h3>
+                        <p>Feb 11</p>
+                    </div>
+                    <div class="day-card" onclick="showDay('hug')">
+                        <h3>🤗 Hug Day</h3>
+                        <p>Feb 12</p>
+                    </div>
+                    <div class="day-card" onclick="showDay('kiss')">
+                        <h3>💋 Kiss Day</h3>
+                        <p>Feb 13</p>
+                    </div>
+                    <div class="day-card" onclick="showDay('valentine')">
+                        <h3>❤️ Valentine&apos;s Day</h3>
+                        <p>Feb 14</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Individual Day Details -->
+        <div id="dayDetailScreen" class="screen">
+            <div class="card">
+                <h1 id="dayTitle"></h1>
+                <div class="itinerary" id="dayItinerary"></div>
+                <div class="message" id="dayMessage"></div>
+                <button class="back-btn" onclick="backToDays()">← Back to All Days</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const days = {
+            rose: {
+                title: '🌹 Rose Day',
+                date: 'February 7, 2026',
+                itinerary: [
+                    { time: 'Morning', activity: 'Wake up to a bouquet of roses delivered to your door' },
+                    { time: 'Afternoon', activity: 'Lunch at your favorite cafe' },
+                    { time: 'Evening', activity: 'Walk in the park, collecting memories' }
+                ],
+                message: 'Like roses bloom in spring, my love for you grows every single day. You bring color to my world! 🌹'
+            },
+            propose: {
+                title: '💍 Propose Day',
+                date: 'February 8, 2026',
+                itinerary: [
+                    { time: 'Morning', activity: 'Breakfast in bed with your favorites' },
+                    { time: 'Afternoon', activity: 'Visit to a special place that reminds us of our first date' },
+                    { time: 'Evening', activity: 'Candlelit dinner at home with handwritten love letters' }
+                ],
+                message: 'Every day with you feels like a new proposal to choose love over and over again. You make my heart say yes! 💍'
+            },
+            chocolate: {
+                title: '🍫 Chocolate Day',
+                date: 'February 9, 2026',
+                itinerary: [
+                    { time: 'Morning', activity: 'Chocolate pancakes for breakfast' },
+                    { time: 'Afternoon', activity: 'Making homemade chocolates together' },
+                    { time: 'Evening', activity: 'Movie night with hot chocolate and your favorite treats' }
+                ],
+                message: 'Life with you is sweeter than the finest chocolate. Thanks for adding flavor to my everyday! 🍫'
+            },
+            teddy: {
+                title: '🧸 Teddy Day',
+                date: 'February 10, 2026',
+                itinerary: [
+                    { time: 'Morning', activity: 'Surprise teddy bear gift with a special name tag' },
+                    { time: 'Afternoon', activity: 'Cozy brunch and photo session with our teddies' },
+                    { time: 'Evening', activity: 'Comfort movie marathon with snacks' }
+                ],
+                message: 'Just like a teddy bear brings comfort, you bring warmth and safety to my life. You&apos;re my forever cuddle buddy! 🧸'
+            },
+            promise: {
+                title: '🤝 Promise Day',
+                date: 'February 11, 2026',
+                itinerary: [
+                    { time: 'Morning', activity: 'Exchange handwritten promise letters' },
+                    { time: 'Afternoon', activity: 'Plant a tree together as a symbol of our growing love' },
+                    { time: 'Evening', activity: 'Stargazing and talking about our future dreams' }
+                ],
+                message: 'I promise to be there through every sunrise and sunset, to hold your hand through every adventure. Forever and always! 🤝'
+            },
+            hug: {
+                title: '🤗 Hug Day',
+                date: 'February 12, 2026',
+                itinerary: [
+                    { time: 'Morning', activity: 'Wake up to the warmest, longest hug' },
+                    { time: 'Afternoon', activity: 'Spa day for relaxation and pampering' },
+                    { time: 'Evening', activity: 'Dancing in the living room to our favorite songs' }
+                ],
+                message: 'In your arms, I found my home. Every hug from you feels like coming back to where I belong. 🤗'
+            },
+            kiss: {
+                title: '💋 Kiss Day',
+                date: 'February 13, 2026',
+                itinerary: [
+                    { time: 'Morning', activity: 'Romantic breakfast with rose petals' },
+                    { time: 'Afternoon', activity: 'Visit to a scenic viewpoint for photos' },
+                    { time: 'Evening', activity: 'Private dinner with candlelight and soft music' }
+                ],
+                message: 'Your kiss is the poetry my heart has been trying to write all along. You complete me in ways words never could! 💋'
+            },
+            valentine: {
+                title: '❤️ Valentine&apos;s Day',
+                date: 'February 14, 2026',
+                itinerary: [
+                    { time: 'Morning', activity: 'Surprise Valentine&apos;s Day gift and card' },
+                    { time: 'Afternoon', activity: 'Special lunch at the restaurant where we first met' },
+                    { time: 'Evening', activity: 'Romantic dinner date followed by a moonlight walk' },
+                    { time: 'Night', activity: 'Watching the stars and making wishes together' }
+                ],
+                message: 'On this Valentine&apos;s Day and every day after, I want you to know that you are my greatest adventure, my best friend, and my forever love. Thank you for saying yes! ❤️'
+            }
+        };
+
+        function moveNoButton() {
+            const noBtn = document.getElementById('noBtn');
+            const container = document.querySelector('.button-container');
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Calculate random position that keeps button in bounds
+            const maxX = containerRect.width - btnRect.width;
+            const maxY = 150;
+            
+            const newX = Math.random() * maxX - 50;
+            const newY = (Math.random() - 0.5) * maxY;
+            
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            noBtn.style.transform = `translate(${Math.random() * 100 - 50}px, ${Math.random() * 50 - 25}px)`;
+        }
+
+        function acceptProposal() {
+            document.getElementById('proposalScreen').classList.remove('active');
+            document.getElementById('daysScreen').classList.add('active');
+        }
+
+        function showDay(dayKey) {
+            const day = days[dayKey];
+            document.getElementById('dayTitle').textContent = day.title;
+            
+            let itineraryHTML = '<h3>Our Day Together:</h3>';
+            day.itinerary.forEach(item => {
+                itineraryHTML += `
+                    <div class="itinerary-item">
+                        <strong>${item.time}:</strong> ${item.activity}
+                    </div>
+                `;
+            });
+            document.getElementById('dayItinerary').innerHTML = itineraryHTML;
+            document.getElementById('dayMessage').textContent = day.message;
+            
+            document.getElementById('daysScreen').classList.remove('active');
+            document.getElementById('dayDetailScreen').classList.add('active');
+        }
+
+        function backToDays() {
+            document.getElementById('dayDetailScreen').classList.remove('active');
+            document.getElementById('daysScreen').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

@@ -421,16 +421,14 @@
             if (!isWithinAccessWindow()) {
                 // Show normal message
                 alert('Our Valentine itinerary will go live on 14th February 2026 at 12:00 am. Can\'t wait to spend these days with you! 💕');
-                return;
                 // SECRET ACCESS CODE for you to bypass date restriction
                 const code = prompt('Enter access code to view early:');
                 if (code === 'kaaju-pista') {
                     // Bypass successful - grant access
                     document.getElementById('proposalScreen').classList.remove('active');
                     document.getElementById('daysScreen').classList.add('active');
-                    return;
                 }
-                
+                return;
             }
             // Allow access to days screen only after Feb 14
             document.getElementById('proposalScreen').classList.remove('active');
@@ -470,3 +468,4 @@
     </script>
 </body>
 </html>
+

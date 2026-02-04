@@ -278,6 +278,15 @@
     </div>
 
     <script>
+        // DATE-GATED ACCESS: Show itinerary only from 14 Feb 2026 00:00 onwards
+        const accessStart = new Date('2026-02-14T00:00:00');
+        const accessEnd = new Date('2026-02-21T23:59:59'); // Optional end date
+
+        function isWithinAccessWindow() {
+            const now = new Date();
+            return now >= accessStart && now <= accessEnd;
+        }
+
         const days = {
             rose: {
                 title: '🌹 Rose Day',
@@ -362,30 +371,65 @@
             }
         };
 
-        function moveNoButton() {
+        // Improved "No" button escape - harder to catch
+        let noBtnPosition = { x: 0, y: 0 };
+        let isNoButtonInitialized = false;
+
+        function initNoButton() {
             const noBtn = document.getElementById('noBtn');
             const container = document.querySelector('.button-container');
             const containerRect = container.getBoundingClientRect();
-            const btnRect = noBtn.getBoundingClientRect();
             
-            // Calculate random position that keeps button in bounds
-            const maxX = containerRect.width - btnRect.width;
-            const maxY = 150;
+            noBtnPosition.x = containerRect.width * 0.6;
+            noBtnPosition.y = 0;
+            noBtn.style.left = noBtnPosition.x + 'px';
+            noBtn.style.top = noBtnPosition.y + 'px';
+            isNoButtonInitialized = true;
+        }
+
+        function moveNoButton() {
+            if (!isNoButtonInitialized) {
+                initNoButton();
+            }
+
+            const noBtn = document.getElementById('noBtn');
+            const container = document.querySelector('.button-container');
+            const containerRect = container.getBoundingClientRect();
             
-            const newX = Math.random() * maxX - 50;
-            const newY = (Math.random() - 0.5) * maxY;
+            const margin = 20;
+            const maxX = containerRect.width - noBtn.offsetWidth - margin;
+            const maxY = 120;
             
-            noBtn.style.left = newX + 'px';
-            noBtn.style.top = newY + 'px';
-            noBtn.style.transform = `translate(${Math.random() * 100 - 50}px, ${Math.random() * 50 - 25}px)`;
+            // Generate new position far from current position
+            let newX, newY;
+            let attempts = 0;
+            do {
+                newX = margin + Math.random() * (maxX - margin);
+                newY = (Math.random() - 0.5) * maxY;
+                attempts++;
+            } while (Math.abs(newX - noBtnPosition.x) < 80 && attempts < 5);
+            
+            noBtnPosition.x = newX;
+            noBtnPosition.y = newY;
+            
+            noBtn.style.left = noBtnPosition.x + 'px';
+            noBtn.style.top = noBtnPosition.y + 'px';
         }
 
         function acceptProposal() {
+            // Check if itinerary is unlocked when clicking Yes
+            if (!isWithinAccessWindow()) {
+                alert('Our Valentine itinerary will go live on 14th February 2026 at 12:00 am. Can\'t wait to spend these days with you! 💕');
+                return;
+            }
+            // Allow access to days screen only after Feb 14
             document.getElementById('proposalScreen').classList.remove('active');
             document.getElementById('daysScreen').classList.add('active');
         }
 
         function showDay(dayKey) {
+            // Day details are accessible once on the days screen
+
             const day = days[dayKey];
             document.getElementById('dayTitle').textContent = day.title;
             
@@ -408,6 +452,11 @@
             document.getElementById('dayDetailScreen').classList.remove('active');
             document.getElementById('daysScreen').classList.add('active');
         }
+
+        // Initialize "No" button position on page load
+        window.addEventListener('load', () => {
+            initNoButton();
+        });
     </script>
 </body>
 </html>
